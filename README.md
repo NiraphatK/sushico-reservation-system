@@ -58,51 +58,61 @@ Admins can upload and manage menu items alongside store policies like **Cut-off 
 - **Database** → [MySQL](https://www.mysql.com/)
 ---
 
-## ⚡ Getting Started
+## Getting started
+
 ### Requirements
-- PHP 8.2+  
-- Composer 2+  
-- MySQL
 
-## 📦 Installation
-```
-# 1. Start XAMPP
-- Start Apache and MySQL in XAMPP Control Panel
+- PHP 8.2+, Composer 2+, and MySQL.
+- Node.js/npm if rebuilding frontend assets.
+- XAMPP is an optional way to run MySQL locally; it is not required when an equivalent PHP/MySQL environment is already configured.
 
-# 2. Clone the repository
-git clone https://github.com/NiraphatK/sushico-website.git
-cd sushico-website
+### Install the Laravel application
 
-# 3. Install dependencies
+The application lives in **`Web/`**, not the repository root:
+
+```bash
+git clone https://github.com/NiraphatK/sushico-reservation-system.git
+cd sushico-reservation-system/Web
 composer install
-
-# 4. Copy .env and update DB settings
 cp .env.example .env
+php artisan key:generate
+```
+
+On Windows without `cp`, copy `.env.example` to `.env` in Explorer or use `Copy-Item` in PowerShell.
+
+Create a new local MySQL database named `sushico`. Set these values in `Web/.env`, replacing the credentials with your local account:
+
+```dotenv
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=sushico
-DB_USERNAME=root
-DB_PASSWORD=
+DB_USERNAME=your_local_user
+DB_PASSWORD=your_local_password
+```
 
-# 5. Create DB and import SQL
-- Visit http://localhost/phpmyadmin
-- Import .sql file from database/ folder
+Import **`Web/database/127_0_0_1.sql`** into the new database using phpMyAdmin or your MySQL client. Review the SQL before importing and use a disposable development database; do not import it over an existing production database. The dump may contain historical sample accounts/data; do not treat their credentials as suitable for deployment.
 
-# 6. Generate app key
-php artisan key:generate
+From `Web/`, prepare frontend assets and start Laravel:
 
-# 7. Link storage (if images are not showing)
+```bash
+npm ci
+npm run build
 php artisan storage:link
-
-# 8. Run the project
 php artisan serve
 ```
-Now open: http://localhost:8000 🎉
+
+Open `http://localhost:8000`. To develop frontend assets interactively, run `npm run dev` in a second terminal from `Web/`.
+
+## Verification
+
+```bash
+php artisan test
+```
+
+After configuring the database, check customer booking, staff check-in, admin menu management, and image display using test data. A successful unit test run alone does not establish that the imported database and all role-specific flows work.
 
 ---
 
 ## 📄 Documentation
-> [📘 Full Project Documentation](https://github.com/NiraphatK/sushico-website/blob/main/Document/Sushico-Report.pdf)  
-
-
+> [📘 Full Project Documentation](https://github.com/NiraphatK/sushico-reservation-system/blob/main/Document/Sushico-Report.pdf)
